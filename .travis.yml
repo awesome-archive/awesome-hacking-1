@@ -1,6 +1,6 @@
 language: python
 python:
-  - "2.7"
+  - "3.6"
 cache: pip
 git:
   submodules: false
@@ -10,10 +10,18 @@ branches:
 install:
   - pip install -r requirements.txt
 script:
-  - sphinx-build -n -b html -d _build/doctrees _pages _build/html
+  - make html
   - make github
 before_script:
   - git config --global user.email ${EMAIL}
   - git config --global user.name ${NICK}
 after_script:
   - make purge
+deploy:
+  provider: pages
+  local-dir: _build/html
+  skip-cleanup: true
+  github-token: $GH_TOKEN  # Set in travis-ci.org dashboard, marked secure
+  keep-history: true
+  on:
+    branch: master
